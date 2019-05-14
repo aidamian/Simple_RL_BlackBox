@@ -9,8 +9,22 @@ import matplotlib.pyplot as plt
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
+
+from time import time
+
+"""
+Episode 139     Average Score: 89.25
+Episode 140     Average Score: 89.48
+Episode 141     Average Score: 89.57
+Episode 142     Average Score: 89.61
+Episode 143     Average Score: 89.60
+Episode 144     Average Score: 89.64
+Episode 145     Average Score: 89.66
+Episode 146     Average Score: 89.66
+Episode 147     Average Score: 90.83
+
+
+"""
 
 
 class Agent(nn.Module):
@@ -25,6 +39,8 @@ class Agent(nn.Module):
     # define layers
     self.fc1 = nn.Linear(self.s_size, self.h_size)
     self.fc2 = nn.Linear(self.h_size, self.a_size)
+    self.tanh = nn.Tanh()
+    self.relu = nn.ReLU()
     if device.type == 'cuda':
       self.cuda(device)
     print("Agent init on device {}".format(self.dev))
@@ -45,14 +61,16 @@ class Agent(nn.Module):
     self.fc1.bias.data.copy_(fc1_b.view_as(self.fc1.bias.data))
     self.fc2.weight.data.copy_(fc2_W.view_as(self.fc2.weight.data))
     self.fc2.bias.data.copy_(fc2_b.view_as(self.fc2.bias.data))
+    
   
   def get_weights_dim(self):
     return (self.s_size+1)*self.h_size + (self.h_size+1)*self.a_size
       
   def forward(self, x):
-    x = F.relu(self.fc1(x))
-    x = F.tanh(self.fc2(x)) 
-    return x.cpu().data
+    x = self.relu(self.fc1(x))
+    x = self.tanh(self.fc2(x)) 
+    # we generate the numpy as no optimization per-se will be done
+    return x.cpu().data 
       
   def evaluate(self, weights, gamma=1.0, max_t=5000):
     self.set_weights(weights)
@@ -94,18 +112,21 @@ def crossentropy_method(env, agent, n_iterations=500, max_t=1000, gamma=1.0,
   print("Starting cross-entropy method training...")
   
   best_scores = -np.inf
-  
+  t_start = time()
   for i_iteration in range(1, n_iterations+1):
+    t_0 = time()
     weights_pop = [best_weight + (sigma*np.random.randn(agent.get_weights_dim())) for i in range(pop_size)]
-    rewards = np.array([agent.evaluate(weights, gamma, max_t) for weights in weights_pop])
+    rewards = np.array([agent.evaluate(weights, gamma, max_t)[0] for weights in weights_pop])
 
     elite_idxs = rewards.argsort()[-n_elite:]
     elite_weights = [weights_pop[i] for i in elite_idxs]
     best_weight = np.array(elite_weights).mean(axis=0)
 
-    reward = agent.evaluate(best_weight, gamma=1.0)
+    reward, nr_steps = agent.evaluate(best_weight, gamma=1.0)
     scores_deque.append(reward)
     scores.append(reward)
+    
+    t_1 = time()
     
     mean_scores = np.mean(scores_deque)
     if mean_scores > best_scores:      
@@ -114,17 +135,23 @@ def crossentropy_method(env, agent, n_iterations=500, max_t=1000, gamma=1.0,
       
     
     if i_iteration % print_every == 0:
-        print('Episode {}\tAverage Score: {:.2f}'.format(i_iteration, np.mean(scores_deque)))
+        print('Episode {}\tAverage Score: {:>5.2f}  Time: {:.1f}s'.format(
+            i_iteration, np.mean(scores_deque), t_1-t_0))
 
     if mean_scores>=90.0:
         print('\nEnvironment solved in {:d} iterations!\tAverage Score: {:.2f}'.format(
             i_iteration-100, np.mean(scores_deque)))
         break
+  t_end = time()
+  print("Training done in {:.1f} min".format((t_end-t_start)/60))
   return scores, i_iteration
 
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+gpu_device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+cpu_device = torch.device("cpu")
+
+device = cpu_device
 
 env = gym.make('MountainCarContinuous-v0')
 env.seed(101)
