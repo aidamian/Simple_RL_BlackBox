@@ -1,6 +1,8 @@
 # Simple Black Box methods for searching for Reinforcement Learning policies
 
-### Hill Ascent - grid search results
+### Hill Ascent
+
+Grid search results on `CartPole-v0`
 
 ```
    Score  Stohastic    Eps  SimAnn  AdaNoi
@@ -14,9 +16,9 @@
 7   66.0      False  10000   False   False
 ```
 
-### Cross Entropy Method
+### Cross Entropy (random) Method
 
-Solved in 147 episodes
+Solved `MountainCarContinuous-v0` in 147 episodes
 
 ```
 Episode 139     Average Score: 89.25
