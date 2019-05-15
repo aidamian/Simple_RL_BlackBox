@@ -7,11 +7,11 @@ Grid search results on `CartPole-v0`
 ```
    Score  Stohastic    Eps  SimAnn  AdaNoi
 0  200.0      False    104    True    True
-1  200.0      False    492   False   False
-2  200.0       True    608   False   False
-3  200.0      False    880    True    True
+1  200.0      False    492   False    True
+2  200.0       True    608   False    True
+3  200.0      False    880    True   False
 4  200.0       True   3705    True    True
-5   15.0       True  10000    True    True
+5   15.0       True  10000    True   False
 6   14.0       True  10000   False   False
 7  181.0      False  10000   False   False
 ```

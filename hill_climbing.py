@@ -23,11 +23,11 @@ Environment solved in 156 episodes!     Average Score: 195.71
 
    Score  Stohastic    Eps  SimAnn  AdaNoi
 0  200.0      False    104    True    True
-1  200.0      False    492   False   False
-2  200.0       True    608   False   False
-3  200.0      False    880    True    True
+1  200.0      False    492   False    True
+2  200.0       True    608   False    True
+3  200.0      False    880    True   False
 4  200.0       True   3705    True    True
-5   15.0       True  10000    True    True
+5   15.0       True  10000    True   False
 6   14.0       True  10000   False   False
 7  181.0      False  10000   False   False
 
@@ -172,6 +172,6 @@ df = pd.DataFrame({
       "Stohastic" :  [x[-1] for x in res],
       "Eps" : [x[1] for x in res],
       "SimAnn" : [x[3] for x in res],
-      "AdaNoi" : [x[3] for x in res]      
+      "AdaNoi" : [x[4] for x in res]      
     })
 print(df.sort_values("Eps"))
