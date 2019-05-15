@@ -17,7 +17,7 @@ Grid search results on `CartPole-v0`
 ```
 Scores for model 0 (best)
 
-![Hill climb] (https://github.com/andreidi/Simple_RL_BlackBox/blob/master/deterministic_hil_climbing.png)
+![Hill climb](https://github.com/andreidi/Simple_RL_BlackBox/blob/master/deterministic_hil_climbing.png)
 
 
 ### Cross Entropy (random) Method
