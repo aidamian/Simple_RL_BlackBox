@@ -22,14 +22,14 @@ Environment solved in 156 episodes!     Average Score: 195.71
 
 
    Score  Stohastic    Eps  SimAnn  AdaNoi
-0  200.0       True    156    True    True
-1  200.0      False    449    True    True
-2  200.0       True   1412    True    True
-3  200.0       True   3136   False   False
-4  200.0       True   8839   False   False
-5   17.0      False  10000    True    True
-6    9.0      False  10000   False   False
-7   66.0      False  10000   False   False
+0  200.0      False    104    True    True
+1  200.0      False    492   False   False
+2  200.0       True    608   False   False
+3  200.0      False    880    True    True
+4  200.0       True   3705    True    True
+5   15.0       True  10000    True    True
+6   14.0       True  10000   False   False
+7  181.0      False  10000   False   False
 
 """
 
@@ -158,7 +158,7 @@ for policy_stohastic in [True, False]:
 
 res = sorted(res, key=lambda x:x[1])
   
-scores, nr_eps, name, _sa, _an = res[0]
+scores, nr_eps, name, _sa, _an, pol = res[0]
 fig = plt.figure()
 ax = fig.add_subplot(111)
 plt.plot(np.arange(1, len(scores)+1), scores)
@@ -174,4 +174,4 @@ df = pd.DataFrame({
       "SimAnn" : [x[3] for x in res],
       "AdaNoi" : [x[3] for x in res]      
     })
-print(df)
+print(df.sort_values("Eps"))
