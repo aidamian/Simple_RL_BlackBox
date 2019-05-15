@@ -66,7 +66,7 @@ class Agent():
       action = np.argmax(probs)              # option 2: deterministic policy
     return action
       
-def discounted_rewards(rewards, gamma):
+def discounted_reward(rewards, gamma):
   """
   Calculates sum(R0 * gamma**0 + R1 * gamma**1 + R2 * gamma**2 + ...)
   """
@@ -117,7 +117,7 @@ def hill_climbing(env, agent, n_episodes=10000, max_t=1000,
 
     #discounts = [gamma**i for i in range(len(rewards)+1)]
     #R = sum([a*b for a,b in zip(discounts, rewards)])
-    R = discounted_rewards(rewards, gamma)
+    R = discounted_reward(rewards, gamma)
 
     if R >= best_R: # found better weights
       best_R = R
